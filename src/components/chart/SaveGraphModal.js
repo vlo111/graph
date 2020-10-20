@@ -84,7 +84,6 @@ class SaveGraphModal extends Component {
   }
 
   saveGraph = async (status, forceCreate) => {
-    debugger;
     const { requestData } = this.state;
     const { match: { params: { graphId } }, customFields } = this.props;
 

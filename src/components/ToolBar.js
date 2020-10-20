@@ -36,7 +36,6 @@ class ToolBar extends Component {
       this.props.getSingleGraphRequest(graphId);
     }
   }
-
   render() {
     const { activeButton, match: { params: { graphId } } } = this.props;
     return (

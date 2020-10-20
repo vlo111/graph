@@ -28,6 +28,8 @@ class Legend extends Component {
 
       let check = Chart.getNodes();
 
+
+
       const links = [...new Map(Chart.getLinks().map((link) => [link.type, link])).values()];
 
       const listNodeItems = nodes.map((node) => (
