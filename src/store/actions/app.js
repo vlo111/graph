@@ -89,3 +89,14 @@ export function setLegendButton(mode) {
     },
   };
 }
+
+export const SET_GRAPH_MODE = 'SET_GRAPH_MODE';
+
+export function setGraphMode(mode) {
+  return {
+    type: SET_GRAPH_MODE,
+    payload: {
+      mode,
+    },
+  };
+}

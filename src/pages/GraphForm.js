@@ -23,6 +23,8 @@ import NodeFullInfo from '../components/nodeInfo/NodeFullInfo';
 import AddLabelModal from '../components/chart/AddLabelModal';
 import LabelTooltip from '../components/LabelTooltip';
 import Legend from '../components/Legend';
+import TreeView from '../components/tree';
+import GraphModeModal from '../components/chart/GraphModeModal';
 
 class GraphForm extends Component {
   static propTypes = {
@@ -31,6 +33,7 @@ class GraphForm extends Component {
     clearSingleGraph: PropTypes.func.isRequired,
     activeButton: PropTypes.string.isRequired,
     match: PropTypes.object.isRequired,
+    graphMode: PropTypes.string.isRequired,
   }
 
   componentDidMount() {
@@ -44,11 +47,11 @@ class GraphForm extends Component {
   }
 
   render() {
-    const { activeButton } = this.props;
+    const { activeButton, graphMode } = this.props;
     return (
       <Wrapper className="graphsPage" showHeader={false} showFooter={false}>
         <div className="graphWrapper">
-          <ReactChart />
+          { graphMode === 'tree' ? <TreeView /> : <ReactChart /> }
         </div>
         <ToolBar />
         <AccountDropDown />
@@ -56,7 +59,8 @@ class GraphForm extends Component {
         <AddNodeModal />
         {activeButton === 'data' && <DataView />}
         {activeButton === 'search' && <SearchModal />}
-          {activeButton === 'maps-view' && <MapsGraph History={this.props.history} />}
+        {activeButton === 'maps-view' && <MapsGraph History={this.props.history} />}
+        {activeButton === 'graph-mode' && <GraphModeModal />}
         <AddLinkModal />
         <AddLabelModal />
         <ContextMenu />
@@ -65,8 +69,8 @@ class GraphForm extends Component {
         <NodeFullInfo />
         <AutoPlay />
         <Zoom />
-        <MapsButton />
-        <Legend />
+          { graphMode !== 'tree' ? <MapsButton /> : null }
+          { graphMode !== 'tree' ? <Legend /> : null }
         <LabelTooltip />
       </Wrapper>
     );
@@ -75,6 +79,7 @@ class GraphForm extends Component {
 
 const mapStateToProps = (state) => ({
   activeButton: state.app.activeButton,
+  graphMode: state.app.graphMode,
 });
 const mapDispatchToProps = {
   setActiveButton,
