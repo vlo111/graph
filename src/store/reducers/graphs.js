@@ -10,6 +10,8 @@ import {
   ADD_NODE_CUSTOM_FIELD_KEY,
   REMOVE_NODE_CUSTOM_FIELD_KEY,
   ACTIONS_COUNT, GET_SINGLE_EMBED_GRAPH,
+  TREE_NODE, ADD_NEW_TREE_NODE_DATA,
+  OPEN_ADD_NEW_TREE_NODE_MODAL,
 } from '../actions/graphs';
 import CustomFields from '../../helpers/CustomFields';
 
@@ -121,6 +123,33 @@ export default function reducer(state = initialState, action) {
           ...state.actionsCount,
           ...action.payload.data.result,
         },
+      };
+    }
+    case TREE_NODE: {
+      if (state.treeNode === action.payload.data) {
+        return state;
+      }
+      return {
+        ...state,
+        treeNode: action.payload.data,
+      };
+    }
+    case ADD_NEW_TREE_NODE_DATA: {
+      if (state.newTreeData === action.payload.data) {
+        return state;
+      }
+      return {
+        ...state,
+        newTreeData: action.payload.data,
+      };
+    }
+    case OPEN_ADD_NEW_TREE_NODE_MODAL: {
+      if (state.isAddTreeModalOpen === action.payload.open) {
+        return state;
+      }
+      return {
+        ...state,
+        isAddTreeModalOpen: action.payload.open,
       };
     }
     default: {

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import shortId from 'shortid';
 import { useSpring, animated } from 'react-spring';
-import Tree from './Tree';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import ScaledTree from './ScaledTree';
-import data from './data';
 import AddTreeNodeModal from './chart/AddTreeNodeModal';
+import { openedAddNewTreeNodeModal } from '../../store/actions/graphs';
 
 export { default as ScaledTree } from './ScaledTree';
-
-const DefaultView = (props) => <Tree data={data} width={600} height={500} {...props} />;
 
 const AnimatedPlus = () => {
   const cicleSpring = useSpring({ r: 12.5, from: { r: 0 } });
@@ -75,18 +74,24 @@ const AnimatedBin = () => {
 };
 
 class CustomizedView extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: { name: 'root', id: shortId.generate() },
-      selected: null,
-      showModal: false,
-    };
-    // this.generateData(4, Math.pow(4, 6));
-  }
+    static propTypes = {
+      treeNode: PropTypes.object.isRequired,
+      // isAddTreeModalOpen: PropTypes.bool.isRequired,
+      openedAddNewTreeNodeModal: PropTypes.func.isRequired,
+    }
+
+    constructor(props) {
+      super(props);
+
+      this.state = {
+        selected: null,
+      };
+
+      // this.generateData(4, Math.pow(4, 6));
+    }
 
     generateData = (breadth, maxNodes) => {
-      const daBois = [this.state.data];
+      const daBois = [this.props.treeNode];
       alert(`will generate ${maxNodes.toString()} nodes`);
       for (let i = 0; daBois.length < maxNodes; i++) {
         const node = daBois[i];
@@ -110,7 +115,7 @@ class CustomizedView extends Component {
 
       return (
         <ScaledTree
-          data={this.state.data}
+          data={props.treeNode}
           onChange={(src, value, data) => console.log(`${src} changed to ${value}, node->${data.name}`)}
           width="100%"
           height={500}
@@ -119,64 +124,63 @@ class CustomizedView extends Component {
               this.state.selected.data.selected = false;
             }
             node.data.selected = true;
-            const path = [];
+            // const path = [];
             if (operations && operations.expandNode) {
-              const ancestors = node.ancestors();
-              operations.expandNode && operations.expandNode(node);
+              // const ancestors = node.ancestors();
+              // operations.expandNode && operations.expandNode(node);
             }
             this.setState({ selected: node });
           }}
           nodeChildren={(node, ops) => {
             if (!node.data.selected) return undefined;
             const width = node.data.renderWidth || 0;
-            const height = node.data.renderHeight || 0;
+            // const height = node.data.renderHeight || 0;
 
             return (
               <>
                 {node.data.selected && (
-                <>
-                  <svg
-                    width="25"
-                    height="25"
-                    x={node.depth > 0 ? -(width / 2) - 12.5 : -25 / 2}
-                    onClick={(ev) => {
-                      ev.preventDefault();
-                      const { selected } = this.state;
-                      selected.children = selected.children || [];
-                      if (ops.addNode) {
-                        selected.children.push(ops.addNode(node));
-                        this.setState({
-                          showModal: !this.state.showModal,
-                        });
-                      }
-                    }}
-                    y={node.depth > 0 ? 0 : width / 2 - 25 / 2}
-                  >
-                    <AnimatedPlus />
-                  </svg>
-                  { /* Delete node */ }
-                  {node.depth > 0 && (
-                  <svg
-                    width="25"
-                    height="25"
-                    x={width / 2 - 12.5}
-                    y={0}
-                    onClick={(ev) => {
-                      ev.preventDefault();
-                      const { selected } = this.state;
-                      if (ops.removeNode && selected) {
-                        const parent = ops.removeNode(selected);
-                        parent.data.selected = true;
-                        this.setState({ selected: parent });
-                      }
-                    }}
-                  >
-                    <AnimatedBin />
-                  </svg>
-                  )}
-                </>
+                  <>
+                    <svg
+                      width="25"
+                      height="25"
+                      x={node.depth > 0 ? -(width / 2) - 12.5 : -25 / 2}
+                      onClick={(ev) => {
+                        ev.preventDefault();
+                        const { selected } = this.state;
+                        selected.children = selected.children || [];
+                        if (ops.addNode) {
+                          this.props.openedAddNewTreeNodeModal(true);
+                          ops.addNode(node);
+                          // selected.children.push(data);
+                        }
+                      }}
+                      y={node.depth > 0 ? 0 : width / 2 - 25 / 2}
+                    >
+                      <AnimatedPlus />
+                    </svg>
+                    { /* Delete node */ }
+                    {node.depth > 0 && (
+                    <svg
+                      width="25"
+                      height="25"
+                      x={width / 2 - 12.5}
+                      y={0}
+                      onClick={(ev) => {
+                        ev.preventDefault();
+                        const { selected } = this.state;
+                        if (ops.removeNode && selected) {
+                          const parent = ops.removeNode(selected);
+                          parent.data.selected = true;
+                          this.setState({ selected: parent });
+                        }
+                      }}
+                    >
+                      <AnimatedBin />
+                    </svg>
+                    )}
+                  </>
                 )}
-                { this.state.showModal && <AddTreeNodeModal /> }
+                <AddTreeNodeModal />
               </>
             );
           }}
@@ -185,4 +189,18 @@ class CustomizedView extends Component {
     }
 }
 
-export default CustomizedView;
+const mapStateToProps = (state) => ({
+  treeNode: state.graphs.treeNode,
+  // isAddTreeModalOpen: state.graphs.isAddTreeModalOpen,
+});
+
+const mapDispatchToProps = {
+  openedAddNewTreeNodeModal,
+};
+
+const Container = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CustomizedView);
+
+export default Container;

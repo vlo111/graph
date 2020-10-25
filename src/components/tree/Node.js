@@ -1,5 +1,5 @@
 import React, {
-  Fragment, useState, useRef, useLayoutEffect,
+  Fragment, useState, useMemo, useRef, useLayoutEffect,
 } from 'react';
 
 const rectOffset = {
@@ -23,7 +23,7 @@ const Node = (props) => {
   const width = (rect && rect.x) || 20;
   const height = (rect && rect.y) || 20;
 
-  const events = React.useMemo(() => ({
+  const events = useMemo(() => ({
     onNodeChange: props.onNodeChange || function (source, value, node) {
       console.log(`TREE.NODE Changed ${source} to ${value} on node ${node.data.id}`);
     },
@@ -108,7 +108,7 @@ const Node = (props) => {
           ? '#71248e'
           : node.children && node.children.length > 0 ? (node.data.selected ? '#71248e' : 'white') : ('#71248e')}
       >
-        {node.data.name}
+        bol{node.data.name}lol
       </text>
     </>
   );

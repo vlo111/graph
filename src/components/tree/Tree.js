@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Group } from '@vx/group';
 import { Tree } from '@vx/hierarchy';
 import { LinearGradient } from '@vx/gradient';
@@ -30,25 +30,25 @@ const TreeView = (props) => {
     onChange,
   } = props;
 
-  const [layout, setlayout] = React.useState('cartesian');
-  const [orientation, setOrientation] = React.useState('horizontal');
-  const [linkType, setLinkType] = React.useState('diagonal');
-  const [stepPercent, setStepPercent] = React.useState(0.5);
-  const [r, forceUpdate] = React.useState(false); // i know...
+  const [layout, setlayout] = useState('cartesian');
+  const [orientation, setOrientation] = useState('horizontal');
+  const [linkType, setLinkType] = useState('diagonal');
+  const [stepPercent, setStepPercent] = useState(0.5);
+  const [r, forceUpdate] = useState(false); // i know...
 
-  const [effectiveWidth, effectiveHeight] = React.useMemo(() => {
+  const [effectiveWidth, effectiveHeight] = useMemo(() => {
     const fHeight = height - 28;
     const fWidth = width;
     return [fWidth, fHeight];
   }, [width, height]);
 
-  const [innerWidth, innerHeight] = React.useMemo(() => {
+  const [innerWidth, innerHeight] = useMemo(() => {
     const iWidth = effectiveWidth - margin.left - margin.right;
     const iHeight = effectiveHeight - margin.top - margin.bottom;
     return [iWidth, iHeight];
   }, [effectiveWidth, effectiveHeight, margin]);
 
-  const { origin, sizeWidth, sizeHeight } = React.useMemo(() => {
+  const { origin, sizeWidth, sizeHeight } = useMemo(() => {
     let origin;
     let sizeWidth;
     let sizeHeight;
@@ -84,7 +84,7 @@ const TreeView = (props) => {
   const forceRefresh = () => {
     forceUpdate((prev) => !prev);
   };
-  const operations = React.useMemo(() => ({
+  const operations = useMemo(() => ({
     addNode:
                 props.addNode
                 || function (node) {
@@ -232,7 +232,7 @@ const TreeView = (props) => {
             left={origin.x}
             root={root}
             size={[sizeWidth, sizeHeight]}
-            separation={(a, b) => (a.parent == b.parent ? 1 : 0.5) / a.depth}
+            separation={(a, b) => (a.parent === b.parent ? 1 : 0.5) / a.depth}
           >
             {(data) => (
               <Group top={origin.y} left={origin.x}>

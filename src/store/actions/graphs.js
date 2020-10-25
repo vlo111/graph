@@ -107,3 +107,36 @@ export const ACTIONS_COUNT = define('ACTIONS_COUNT');
 export function getActionsCountRequest(id) {
   return ACTIONS_COUNT.request(() => Api.getActionsCount(id));
 }
+
+export const TREE_NODE = 'TREE_NODE';
+
+export function setTreeNode(data) {
+  return {
+    type: TREE_NODE,
+    payload: {
+      data,
+    },
+  };
+}
+
+export const ADD_NEW_TREE_NODE_DATA = 'ADD_NEW_TREE_NODE_DATA';
+
+export function addNewTreeNode(data) {
+  return {
+    type: TREE_NODE,
+    payload: {
+      data,
+    },
+  };
+}
+
+export const OPEN_ADD_NEW_TREE_NODE_MODAL = 'OPEN_ADD_NEW_TREE_NODE_MODAL';
+
+export function openedAddNewTreeNodeModal(open) {
+  return {
+    type: OPEN_ADD_NEW_TREE_NODE_MODAL,
+    payload: {
+      open,
+    },
+  };
+}

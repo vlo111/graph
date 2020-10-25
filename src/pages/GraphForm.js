@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import shortId from 'shortid';
 import Wrapper from '../components/Wrapper';
 import ToolBar from '../components/ToolBar';
 import ReactChart from '../components/chart/ReactChart';
@@ -11,7 +12,7 @@ import DataView from '../components/dataView/DataView';
 import DataImport from '../components/import/DataImportModal';
 import NodeDescription from '../components/NodeDescription';
 import { setActiveButton } from '../store/actions/app';
-import { clearSingleGraph, getSingleGraphRequest } from '../store/actions/graphs';
+import { clearSingleGraph, getSingleGraphRequest, setTreeNode } from '../store/actions/graphs';
 import AddLinkModal from '../components/chart/AddLinkModal';
 import Zoom from '../components/Zoom';
 import AccountDropDown from '../components/account/AccountDropDown';
@@ -31,14 +32,23 @@ class GraphForm extends Component {
     getSingleGraphRequest: PropTypes.func.isRequired,
     setActiveButton: PropTypes.func.isRequired,
     clearSingleGraph: PropTypes.func.isRequired,
+    setTreeNode: PropTypes.func.isRequired,
     activeButton: PropTypes.string.isRequired,
     match: PropTypes.object.isRequired,
     graphMode: PropTypes.string.isRequired,
+    history: PropTypes.object.isRequired,
   }
 
   componentDidMount() {
     const { match: { params: { graphId } } } = this.props;
     this.props.setActiveButton('create');
+    // Initial tree node
+    this.props.setTreeNode(
+      {
+        name: 'root',
+        id: shortId.generate(),
+      },
+    );
     if (+graphId) {
       this.props.getSingleGraphRequest(graphId);
     } else {
@@ -69,8 +79,8 @@ class GraphForm extends Component {
         <NodeFullInfo />
         <AutoPlay />
         <Zoom />
-          { graphMode !== 'tree' ? <MapsButton /> : null }
-          { graphMode !== 'tree' ? <Legend /> : null }
+        { graphMode !== 'tree' ? <MapsButton /> : null }
+        { graphMode !== 'tree' ? <Legend /> : null }
         <LabelTooltip />
       </Wrapper>
     );
@@ -85,6 +95,7 @@ const mapDispatchToProps = {
   setActiveButton,
   getSingleGraphRequest,
   clearSingleGraph,
+  setTreeNode,
 };
 const Container = connect(
   mapStateToProps,

@@ -17,7 +17,6 @@ const styles = createStyles({
 const ScaledTree = (props) => {
   const [width, setWidth] = React.useState(0);
   const [height, setHeight] = React.useState(0);
-
   return (
     <Measure
       bounds

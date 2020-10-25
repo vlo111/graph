@@ -7,9 +7,7 @@ import _ from 'lodash';
 import Input from '../../form/Input';
 import FileInput from '../../form/FileInput';
 import Button from '../../form/Button';
-import Chart from "../../../Chart";
-import Validate from "../../../helpers/Validate";
-import moment from "moment";
+import { addNewTreeNode, openedAddNewTreeNodeModal } from '../../../store/actions/graphs';
 
 class GraphModeModal extends Component {
   initNodeData = memoizeOne(() => {
@@ -23,16 +21,15 @@ class GraphModeModal extends Component {
     });
   }, _.isEqual)
 
-  // static propTypes = {
-  //   setActiveButton: PropTypes.func.isRequired,
-  //   setGraphMode: PropTypes.func.isRequired,
-  //   graphMode: PropTypes.func.isRequired,
-  // }
+  static propTypes = {
+    addNewTreeNode: PropTypes.func.isRequired,
+    openedAddNewTreeNodeModal: PropTypes.func.isRequired,
+    isAddTreeModalOpen: PropTypes.bool.isRequired,
+  }
 
   constructor(props) {
     super(props);
     this.state = {
-      show: false,
       nodeData: {
         keywords: [],
       },
@@ -40,11 +37,11 @@ class GraphModeModal extends Component {
   }
 
   componentDidMount() {
-    this.setState({ show: true });
+    this.props.openedAddNewTreeNodeModal(false);
   }
 
   disableModal = () => {
-    this.setState({ show: false });
+    this.props.openedAddNewTreeNodeModal(false);
   }
 
   handleChange = (path, value) => {
@@ -58,13 +55,16 @@ class GraphModeModal extends Component {
     ev.preventDefault();
     const { nodeData } = this.state;
 
-    this.setState({ nodeData });
+    this.props.addNewTreeNode(nodeData);
+
+    this.props.openedAddNewTreeNodeModal(false);
   }
 
   render() {
-    const { show, nodeData } = this.state;
+    const { nodeData } = this.state;
     this.initNodeData();
-    if (!show) {
+
+    if (!this.props.isAddTreeModalOpen) {
       return null;
     }
 
@@ -114,13 +114,12 @@ class GraphModeModal extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  activeButton: state.app.activeButton,
-  graphMode: state.app.graphMode,
+  isAddTreeModalOpen: state.graphs.isAddTreeModalOpen,
 });
 
 const mapDispatchToProps = {
-  // setActiveButton,
-  // setGraphMode,
+  openedAddNewTreeNodeModal,
+  addNewTreeNode,
 };
 
 const Container = connect(
