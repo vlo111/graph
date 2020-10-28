@@ -121,6 +121,25 @@ class Utils {
       return true;
     }
   }
+
+  static orderGroup(groups, curentType) {
+    if (groups.length > 1) {
+      groups = groups.sort((a, b) => {
+        if (a.value < b.value) return -1;
+        if (a.value > b.value) return 1;
+        return 0;
+      });
+
+      const indexValue = groups.map((p) => (p ? p.value : null)).indexOf(curentType);
+
+      if (indexValue > 0) {
+        const firstItem = groups.find((p) => p.value === curentType);
+        groups.splice(indexValue, 1);
+
+        groups.unshift(firstItem);
+      }
+    }
+  }
 }
 
 export default Utils;

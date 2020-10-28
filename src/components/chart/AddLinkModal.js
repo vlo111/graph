@@ -14,6 +14,7 @@ import { DASH_TYPES } from '../../data/link';
 import Validate from '../../helpers/Validate';
 import SvgLine from '../SvgLine';
 import ContextMenu from '../contextMenu/ContextMenu';
+import Utils from '../../helpers/Utils';
 
 class AddLinkModal extends Component {
   static propTypes = {
@@ -115,13 +116,18 @@ class AddLinkModal extends Component {
   }
 
   render() {
-    const { linkData, index, errors, show } = this.state;
+    const {
+      linkData, index, errors, show,
+    } = this.state;
     if (!show) {
       return null;
     }
     const links = Chart.getLinks();
     const types = this.getTypes(links);
     const isUpdate = !_.isNull(index);
+
+    Utils.orderGroup(types, linkData.type);
+
     return (
       <Modal
         className="ghModal"
