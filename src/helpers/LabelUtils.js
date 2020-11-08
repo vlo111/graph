@@ -60,9 +60,13 @@ class LabelUtils {
         data.links = data.links.map((l) => {
           if (l.source === originalName) {
             l.source = d.name;
+            l.sx = l.sx - minX + posX;
+            l.sy = l.sy - minY + posY;
           }
           if (l.target === originalName) {
             l.target = d.name;
+            l.tx = l.tx - minX + posX;
+            l.ty = l.ty - minY + posY;
           }
           return l;
         });

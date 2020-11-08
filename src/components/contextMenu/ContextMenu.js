@@ -87,6 +87,9 @@ class ContextMenu extends Component {
     if (!show) {
       return null;
     }
+    // remove curve points
+    Chart.wrapper.selectAll('#fcurve, #lcurve').remove();
+
     const undoCount = Chart.undoManager.undoCount();
     const showInMap = Chart.getNodes().some((d) => d.location);
     return (
