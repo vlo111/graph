@@ -610,9 +610,6 @@ class Chart {
       this.point.tc.x = link.tx;
       this.point.tc.y = link.ty;
     } else {
-      this.point = {};
-      this.point.sc = { x: scx, y: scy };
-      this.point.tc = { x: tcx, y: tcy };
       // Initial curve data
       link.sx = this.point.sc.x;
       link.sy = this.point.sc.y;
