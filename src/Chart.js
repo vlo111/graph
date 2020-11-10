@@ -598,6 +598,12 @@ class Chart {
     this.line.l1 = Chart.svg.select('#curveLink1');
     this.line.l2 = Chart.svg.select('#curveLink2');
 
+    if (!this.point) {
+      this.point = {};
+      this.point.sc = { x: scx, y: scy };
+      this.point.tc = { x: tcx, y: tcy };
+    }
+
     if (link.sx && link.sy && link.tx && link.ty) {
       this.point.sc.x = link.sx;
       this.point.sc.y = link.sy;
